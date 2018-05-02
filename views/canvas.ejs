@@ -50,7 +50,7 @@
           <p class="main white toolitem">Volume</p>
           <div class="scv">
             <div class="slider_container">
-              <input type="range" min="1" max="100" value="50" class="slider volume toolitem" id="volume_s">
+              <input type="range" min="0" max="100" value="80" class="slider volume toolitem" id="volume_s">
             </div>
             <div class="valuebubble">
               <p class="main white" id="volume_value"></p>
@@ -61,7 +61,7 @@
           <p class="main white toolitem">Trim</p>
           <div class="scv">
             <div class="slider_container">
-              <input type="range" min="1" max="100" value="50" class="slider trim toolitem" id="trim_s">
+              <input type="range" min="1" max="10" value="5" class="slider trim toolitem" id="trim_s">
             </div>
             <div class="valuebubble">
               <p class="main white" id="trim_value"></p>
@@ -70,21 +70,13 @@
           <div class="dropdown">
             <p class="main white toolitem">Fade <i class="ion ion-android-arrow-dropdown"></i></p>
             <div class="dropdown-content">
-              <a href="#">0.2s</a>
-              <a href="#">0.5s</a>
-              <a href="#">1s</a>
-              <a href="#">1.5s</a>
+              <a id="fade" onclick="fade(10)">1.0s</a>
+              <a id="fade" onclick="fade(15)">1.5s</a>
+              <a id="fade" onclick="fade(20)">2.0s</a>
+              <a id="fade" onclick="fade(25)">2.5s</a>
             </div>
           </div>
-          <div class="dropdown">
-            <p class="main white toolitem">Loop <i class="ion ion-android-arrow-dropdown"></i></p>
-            <div class="dropdown-content">
-              <a href="#">1 time</a>
-              <a href="#">2 times</a>
-              <a href="#">3 times</a>
-              <a href="#">4 times</a>
-            </div>
-          </div>
+          <p class="main white toolitem" onclick="loop()">Loop</p>
           <p class="main white toolitem unavail">Merge</i></p>
         </div>
         <div class="expanded_mic" id="expanded_mic" style="display: none;">
@@ -107,13 +99,32 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.9/howler.js"></script>
   <script language="JavaScript" type="text/javascript">
+
     var sound = new Howl({
       src: ['./audio/testsound.mp3'],
-      volume: 0.8
+      volume: 0.8,
+      onend: function() {
+        document.getElementById("playbutton").className = "ion ion-play";
+      }
     });
+
+    function fade(value) {
+      sound.fade(1,0,value*100)
+    }
+
+    function loop() {
+      sound.loop(true)
+    }
 
     $('#playbutton').click(function(){
     var clicked = $(this).data('clicked');
+
+
+    var volume_s = document.getElementById('volume_s');
+    volume_s.onchange = function(){
+      //console.log(this.value)
+      sound.volume(this.value/100)
+    }
 
     if ( clicked ) {
       sound.play();
@@ -127,6 +138,7 @@
 
     $(this).data('clicked', !clicked);
     });
+
   </script>
   </body>
 </html>
